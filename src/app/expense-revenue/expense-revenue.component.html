@@ -1,0 +1,54 @@
+<app-form [fields]="fields" [entity]="entity" [submitted]="isformSubmitted" [isModal]="true" (formSubmitted)="save($event)"></app-form>
+
+<div class="container d-flex flex-column h-100 overflow-hidden">
+
+  <div class="d-flex align-items-center justify-content-start gap-3 mb-2">
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox">
+      <label class="form-check-label">Expense</label>
+    </div>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox">
+      <label class="form-check-label">Revenue</label>
+    </div>
+  </div>
+
+  <!-- Scrollable table body wrapper -->
+  <div class="table-container flex-grow-1">
+    <table class="table table-striped table-hover">
+      <thead class="table-dark table-fixed-header">
+        <tr>
+          <th>#</th>
+          <th>Item</th>
+          <th>Type</th>
+          <th>Amount (GHS)</th>
+          <th class="d-none d-md-table-cell">Date</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (track of tracker$ | async; track $index) {
+          <tr>
+            <th scope="row">{{ $index + 1 }}</th>
+            <td>{{ track.itemName }}</td>
+            <td>{{ track.trackType }}</td>
+            <td>{{ track.amount | number }}</td>
+            <td class="d-none d-md-table-cell">
+              {{ track.date ? (track.date | date:'dd MMM, YYYY') : 'N/A' }}
+            </td>
+          </tr>
+        }
+
+        @if ((tracker$ | async)?.length === 0) {
+          <tr>
+            <td colspan="5" class="text-center">
+              <strong>Item not found</strong>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+</div>
+

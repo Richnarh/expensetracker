@@ -1,0 +1,128 @@
+@if(isModal){
+<div class="modal-header">
+    <div class="d-flex align-items-center justify-content-between flex-grow-1 pe-2">
+      <h5 class="modal-title fs-6"> {{entity?.id ? 'Edit' : 'Add'}} {{entity?.name}}</h5>
+    </div>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()"></button>
+</div>
+}
+<div class="flex-grow-1 overflow-hidden py-2 px-3">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate autocomplete="off" id="id-form">
+        @for (field of fields; track field) {
+            <div class="g-3">
+                @switch (field.type) {
+                    @case ('text') {
+                        <div class="py-2">
+                            <label [for]="field.name" class="form-label fw-bold">{{ field.label }} @if (field.required) {<span class="text-danger">*</span>}</label>
+                            <input [id]="field.name" [formControlName]="field.name" [placeholder]="field.placeholder || ''"
+                                class="form-control" [ngClass]="{'is-invalid': form.get(field.name)?.invalid && form.get(field.name)?.touched}" type="text">
+                            <small class="invalid-feedback">{{validate(field.name, field.label)}}</small>
+                        </div>
+                    }
+                    @case ('email') {
+                        <div class="py-2">
+                            <label [for]="field.name" class="form-label fw-bold">{{ field.label }} @if (field.required) {<span class="text-danger">*</span>}</label>
+                            <input [id]="field.name" [formControlName]="field.name" [placeholder]="field.placeholder || ''"
+                                class="form-control" [ngClass]="{'is-invalid': form.get(field.name)?.invalid && form.get(field.name)?.touched}"
+                                type="email">
+                            <small class="invalid-feedback">{{validate(field.name, field.label)}}</small>
+                            @if (form.get(field.name)?.hasError('email') && form.get(field.name)?.touched) {
+                                <div class="invalid-feedback">
+                                    Please enter a valid email
+                                </div>
+                            }
+                        </div>
+                    }
+                    @case ('number') {
+                        <div class="py-2">
+                            <label [for]="field.name" class="form-label fw-bold">{{ field.label }} @if (field.required) {<span class="text-danger">*</span>}</label>
+                            <input [id]="field.name" [formControlName]="field.name" [placeholder]="field.placeholder || ''"
+                                class="form-control" [ngClass]="{'is-invalid': form.get(field.name)?.invalid && form.get(field.name)?.touched}"
+                                type="number">
+                            <small class="invalid-feedback">{{validate(field.name, field.label)}}</small>
+                        </div>
+                    }
+                    @case ('tel') {
+                        <div class="py-2">
+                            <label [for]="field.name" class="form-label fw-bold">{{ field.label }} @if (field.required) {<span class="text-danger">*</span>}</label>
+                            <input [id]="field.name" [formControlName]="field.name" [placeholder]="field.placeholder || ''"
+                                class="form-control" [ngClass]="{'is-invalid': form.get(field.name)?.invalid && form.get(field.name)?.touched}"
+                                type="tel">
+                            <small class="invalid-feedback">{{validate(field.name, field.label)}}</small>
+                        </div>
+                    }@case ('password') {
+                        <div class="py-2">
+                            <label [for]="field.name" class="form-label fw-bold">{{ field.label }}</label>
+                            <input [id]="field.name" [formControlName]="field.name" [placeholder]="field.placeholder || ''"
+                                class="form-control" [ngClass]="{'is-invalid': form.get(field.name)?.invalid && form.get(field.name)?.touched}"
+                                type="password">
+                            <small class="invalid-feedback">{{validate(field.name, field.label)}}</small>
+                        </div>
+                    }@case ('select') {
+                        <div class="py-2">
+                            <label [for]="field.name" class="form-label fw-bold">{{ field.label }} @if (field.required) {<span class="text-danger">*</span>}</label>
+                            <select [id]="field.name" [formControlName]="field.name"
+                                    class="form-select" [ngClass]="{'is-invalid': form.get(field.name)?.invalid && form.get(field.name)?.touched}">
+                                <option [value]="null" disabled selected>Select an option</option>
+                                @for (option of field.options; track option) {
+                                    <option [value]="option.value">{{ option.label }}</option>
+                                }
+                            </select>
+                            <small class="invalid-feedback">{{validate(field.name, field.label)}}</small>
+                        </div>
+                    }
+                    @case ('checkbox') {
+                        <div class="form-check form-switch">
+                            <input [id]="field.name" [formControlName]="field.name" class="form-check-input" type="checkbox">
+                            <label [for]="field.name" class="form-check-label">{{ field.label }} @if (field.required) {<span class="text-danger">*</span>}</label>
+                        </div>
+                    }
+                    @case ('textarea') {
+                        <div class="py-2">
+                            <label [for]="field.name" class="form-label fw-bold">{{ field.label }} @if (field.required) {<span class="text-danger">*</span>}</label>
+                            <textarea [id]="field.name" [formControlName]="field.name" [placeholder]="field.placeholder || ''"
+                                    class="form-control" [ngClass]="{'is-invalid': form.get(field.name)?.invalid && form.get(field.name)?.touched}"
+                                    rows="4"></textarea>
+                            <small class="invalid-feedback">{{validate(field.name, field.label)}}</small>
+                        </div>
+                    }
+                    @case ('date') {
+                        <div class="py-2">
+                            <label [for]="field.name" class="form-label fw-bold">{{ field.label }} @if (field.required) {<span class="text-danger">*</span>}</label>
+                            <input [id]="field.name" [formControlName]="field.name" [placeholder]="field.placeholder || ''"
+                                class="form-control" [ngClass]="{'is-invalid': form.get(field.name)?.invalid && form.get(field.name)?.touched}"
+                                type="date">
+                            @if (form.get(field.name)?.hasError('required') && form.get(field.name)?.touched) {
+                                <div class="invalid-feedback">
+                                    {{ field.label }} is required
+                                </div>
+                            }
+                        </div>
+                    }
+                    @case ('datetime') {
+                        <div class="py-2">
+                            <label [for]="field.name" class="form-label fw-bold">{{ field.label }} @if (field.required) {<span class="text-danger">*</span>}</label>
+                            <input [id]="field.name" [formControlName]="field.name" [placeholder]="field.placeholder || ''"
+                                class="form-control" [ngClass]="{'is-invalid': form.get(field.name)?.invalid && form.get(field.name)?.touched}" type="datetime-local">
+                            @if (form.get(field.name)?.hasError('required') && form.get(field.name)?.touched) {
+                                <div class="invalid-feedback">
+                                    {{ field.label }} is required
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+        }
+    </form>
+</div>
+@if(isModal){
+    <div class="text-end w-100 p-3 border-top">
+        <button class="btn btn-outline-dark ms-2 mx-2" type="button" (click)="activeModal.close()">Cancel</button>
+        <button class="btn btn-primary" [disabled]="form.invalid || submitted" form="id-form">Save</button>
+    </div>
+}@else {
+    <div class="text-end w-100 p-3 border-top">
+         <button class="btn btn-primary" [disabled]="form.invalid || submitted" form="id-form">Save</button>
+    </div>
+}
