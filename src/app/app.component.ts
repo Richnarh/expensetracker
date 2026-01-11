@@ -10,6 +10,8 @@ import { CrudService } from './services/crud.service';
 import { NgPipesModule } from 'ngx-pipes';
 import { AddProjectComponent } from './add-project/add-project.component';
 import { ExpenseRevenueComponent } from './expense-revenue/expense-revenue.component';
+import { ToastrService } from 'ngx-toastr';
+import { SummaryComponent } from './summary/summary.component';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +23,7 @@ import { ExpenseRevenueComponent } from './expense-revenue/expense-revenue.compo
 export class AppComponent {
   private crud = inject(CrudService);
   private modal = inject(NgbModal);
+  private toast = inject(ToastrService);
   private projectsSubject:BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
   public projects$ = this.projectsSubject.asObservable();
 
@@ -36,7 +39,6 @@ export class AppComponent {
       this.crud.data$.subscribe({
         next: (project) => {
           if (project) {
-            // this.allProjects = [...this.allProjects, project];
             this.loadProjects();
           }
         },
@@ -107,5 +109,20 @@ export class AppComponent {
    const expenseModal = this.modal.open(ExpenseRevenueComponent, {size:'xl', backdrop:'static', scrollable:true});
     expenseModal.componentInstance.project = project;
    expenseModal.result.then(() => noop);
+  }
+
+  public deleteItem(project:Project){
+    const con = confirm('Do you want to delete this item');
+    if(!con) return;
+    this.crud.delete(project.id, 'projects')
+    .subscribe(() => {
+      this.toast.success('Item deleted successful');
+      this.loadProjects()
+    });
+  }
+
+  public handleSummary(project:Project){
+    const modal = this.modal.open(SummaryComponent, { size: 'md' });
+    modal.componentInstance.project = project;
   }
 }

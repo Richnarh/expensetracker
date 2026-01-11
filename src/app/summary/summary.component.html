@@ -1,0 +1,66 @@
+<div class="modal-header">
+    <div class="d-flex align-items-center justify-content-between flex-grow-1 pe-2">
+      <h5 class="modal-title fs-6"> Summary</h5>
+    </div>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.close()"></button>
+</div>
+
+<div class="p-3">
+    <div class="d-flex align-items-center justify-content-between">
+        <p class="fw-bold">Equity: {{project.capitalInvestment | number:'1.2-2'}}</p>
+        <p class="fw-bold">Balance: {{balance | number:'1.2-2' }}</p>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-between m-2">
+        <div class="d-flex flex-column">
+            <h5>Expenses</h5>
+            @if (expenseSummary$ | async; as expenses) {
+                @if (expenses.result.length > 0 ) {
+                    <ol>
+                        @for (expense of expenses.result; track $index) {
+                            <li>{{expense.name}}: {{expense.amount}}</li>
+                        }
+                    </ol>
+                    <span class="fw-bold">
+                      Total: {{expenses.total}}
+                    </span>
+                }@else {
+                    <div class="text-center text-muted" style="font-size: small;">No Expense Record found.</div>
+                }
+            }
+        </div>
+        <div class="d-flex flex-column">
+            <h5>Revenue</h5>
+            @if (revenueeSummary$ | async; as revenues) {
+                @if (revenues.result.length > 0 ) {
+                    <ol>
+                        @for (revenue of revenues.result; track $index) {
+                            <li>{{revenue.name}}: {{revenue.amount}}</li>
+                        }
+                    </ol>
+                    <span class="fw-bold">
+                      Total: {{revenues.total}}
+                    </span>
+                }@else {
+                    <div class="text-center text-muted" style="font-size: small;">No Revenue Record found.</div>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="text-center gap-3">
+        <div>
+            @if(totalExpense !== 0 || totalRevenue !== 0){
+                @if(totalRevenue > totalExpense){
+                    <span class="fs-4 fw-bold text-success">Profit: {{PnL}}</span>
+                }@else {
+                    <span class="fs-4 fw-bold text-danger">Loss: {{PnL}}</span>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+<div class="text-end w-100 p-3 border-top">
+    <button class="btn btn-outline-dark ms-2 mx-2" type="button" (click)="activeModal.close()">Cancel</button>
+</div>
