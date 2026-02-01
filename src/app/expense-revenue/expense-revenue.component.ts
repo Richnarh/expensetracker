@@ -34,7 +34,7 @@ export class ExpenseRevenueComponent implements OnInit{
     });
   }
 
-   save(form: FormGroup) {
+  save(form: FormGroup) {
       if(!this.project){
         this.toast.error('Project not found');
         return;

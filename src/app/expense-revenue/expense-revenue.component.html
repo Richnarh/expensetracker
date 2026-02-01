@@ -23,6 +23,7 @@
           <th>Type</th>
           <th>Amount (GHS)</th>
           <th class="d-none d-md-table-cell">Date</th>
+          <th></th>
         </tr>
       </thead>
 
@@ -35,6 +36,11 @@
             <td>{{ track.amount | number }}</td>
             <td class="d-none d-md-table-cell">
               {{ track.date ? (track.date | date:'dd MMM, YYYY') : 'N/A' }}
+            </td>
+            <td class="text-end">
+                <button type="button" title="Delete item" class="btn btn-sm btn-glass-dark button rounded-circle p-1 btn-ellipses d-inline-flex" (click)="deleteItem(track)">
+                    <i class="las la-trash fs-5"></i>
+                </button>
             </td>
           </tr>
         }
